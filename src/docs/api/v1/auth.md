@@ -1,13 +1,13 @@
 ## AUTH AuthController /auth
 
-### GET /admins/check-email?email={email}
+### ?GET /admins/check-email?email={email}
 	### Success
 	204
 
 	### Not Found
 	404
 
-### GET /admins/{id}
+### ?GET /admins/{id}
 	### Success
 	204
 
@@ -15,7 +15,7 @@
 	404
 
 ### POST /signup??
-### POST /signin
+### POST /login
 	body: {
 		email: string,
 		password?: string, // if not passed, sends an email with link for enter
@@ -24,7 +24,7 @@
 
 	### if with password
 	200: {
-		username: number,
+		id: number,
 		displayName: string,
 		isAdmin: boolean,
 		email: string,

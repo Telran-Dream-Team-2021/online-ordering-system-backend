@@ -6,7 +6,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthDto {
+public class AuthRequestDto {
     // TODO
     private String email;
     private String password;

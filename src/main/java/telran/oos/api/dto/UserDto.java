@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 public class UserDto {
     // TODO validation rules and username -> id
-    private Long username;
+    private Long id;
     private boolean isAdmin;
     private String displayName;
     private String deliveryAddress;
