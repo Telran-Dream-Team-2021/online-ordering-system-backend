@@ -15,17 +15,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class OosSecurityConfigurer extends WebSecurityConfigurerAdapter {
-//    AuthJwtFilter authJwtFilter;
-//
-//    @Autowired
-//    public void setAuthJwtFilter(AuthJwtFilter authJwtFilter) {
-//        this.authJwtFilter = authJwtFilter;
-//    }
+    AuthJwtFilter authJwtFilter;
 
-//    @Bean
-//    PasswordEncoder getPasswordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
+    @Autowired
+    public void setAuthJwtFilter(AuthJwtFilter authJwtFilter) {
+        this.authJwtFilter = authJwtFilter;
+    }
+
+    @Bean
+    PasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -34,7 +34,7 @@ public class OosSecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-//        http.addFilterBefore(authJwtFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(authJwtFilter, UsernamePasswordAuthenticationFilter.class);
         http.authorizeHttpRequests()
                 .antMatchers("/**").permitAll();
 //                .antMatchers(HttpMethod.GET).hasAnyRole(ADMIN, USER)
