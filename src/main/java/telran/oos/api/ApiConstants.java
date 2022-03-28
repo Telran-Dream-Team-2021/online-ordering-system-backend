@@ -1,7 +1,8 @@
 package telran.oos.api;
 
 public interface ApiConstants {
-    final String API_MAPPING = "/api/v1";
-    final String LOGIN_MAPPING = "/login";
-    final String PRODUCT_MAPPING = "/products";
+    String API_MAPPING = "/api/v1";
+    String LOGIN_MAPPING = API_MAPPING + "/login";
+    String USER_MAPPING = API_MAPPING + "/users";
+    String PRODUCT_MAPPING = "/products";
 }

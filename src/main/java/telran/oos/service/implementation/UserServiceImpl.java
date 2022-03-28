@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import telran.oos.api.dto.UserDto;
 import telran.oos.jpa.entity.User;
 import telran.oos.jpa.repository.UserRepository;
 import telran.oos.service.UserService;
@@ -18,8 +19,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User read(Long id) {
-        return repository.findById(id).orElse(null);
+    public UserDto read(Long id) {
+        return repository.getUserById(id);
     }
 
     @Override
