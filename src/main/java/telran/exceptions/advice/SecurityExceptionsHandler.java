@@ -1,8 +1,7 @@
 package telran.exceptions.advice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -10,20 +9,19 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 import telran.exceptions.dto.ResponseDto;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
 
+@Slf4j
 @Component
 public class SecurityExceptionsHandler implements AccessDeniedHandler, AuthenticationEntryPoint {
-    private static final Logger log = LoggerFactory.getLogger(SecurityExceptionsHandler.class);
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
-                       AccessDeniedException accessDeniedException) throws IOException, ServletException {
+                       AccessDeniedException accessDeniedException) throws IOException {
         Principal principal = request.getUserPrincipal();
         String message = String.format("User %s disallowed to run request %s", principal.getName(),
                 request.getRequestURL());
@@ -36,7 +34,7 @@ public class SecurityExceptionsHandler implements AccessDeniedHandler, Authentic
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
-                         AuthenticationException authException) throws IOException, ServletException {
+                         AuthenticationException authException) throws IOException {
         String message = String.format("Authentication error %s", request.getRequestURL());
 
         log.error(message);

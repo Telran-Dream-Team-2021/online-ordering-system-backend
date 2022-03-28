@@ -3,7 +3,7 @@
 	### Success
 	200: [
 		{
-			username: number;//id
+			uid: number;//id
 			isAdmin: boolean;
 			displayName: string;
 			deliveryAddress?: string;
