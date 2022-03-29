@@ -12,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static telran.oos.api.ApiConstants.*;
+
 @Configuration
 @EnableWebSecurity
 public class OosSecurityConfigurer extends WebSecurityConfigurerAdapter {
@@ -29,15 +31,12 @@ public class OosSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        String wsEndpoint = String.format("/%s/**", WS_ENDPOINT);
-//
         http.cors().and().csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(authJwtFilter, UsernamePasswordAuthenticationFilter.class);
         http.authorizeHttpRequests()
+                .antMatchers(HttpMethod.GET, USER_MAPPING + "/**").authenticated()
                 .antMatchers("/**").permitAll();
-//                .antMatchers(HttpMethod.GET).hasAnyRole(ADMIN, USER)
-//                .anyRequest().hasRole(ADMIN);
     }
 }

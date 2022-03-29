@@ -7,6 +7,8 @@ import telran.oos.api.dto.Roles;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.EnumSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,15 +24,24 @@ public class User implements UserDetails {
     private String email;
     @Column(unique = true)
     private String hashPassword;
-    @Column(columnDefinition = "varchar(255) not null default 'MORTAL'")
-    @Enumerated(EnumType.STRING)
-    private Roles role;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Role> roles;
     private String displayName;
     private String deliveryAddress;
 
+    public boolean isAdmin() {
+        for (Role role : roles) {
+            if (role.getName().equals(Roles.ROLE_ADMIN.toString())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return getRoles();
     }
 
     @Override
