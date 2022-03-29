@@ -36,7 +36,7 @@ public class OosSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
         http.addFilterBefore(authJwtFilter, UsernamePasswordAuthenticationFilter.class);
         http.authorizeHttpRequests()
-                .antMatchers(HttpMethod.GET, USER_MAPPING + "/**").authenticated()
+                .antMatchers(USER_MAPPING + "/**").authenticated()
                 .antMatchers("/**").permitAll();
     }
 }
