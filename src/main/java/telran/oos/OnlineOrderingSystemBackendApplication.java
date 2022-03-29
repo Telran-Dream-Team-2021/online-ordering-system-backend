@@ -13,10 +13,6 @@ public class OnlineOrderingSystemBackendApplication {
     public static void main(String[] args) {
         SpringApplication.run(OnlineOrderingSystemBackendApplication.class, args);
     }
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
 
     @Bean
     public ModelMapper modelMapper(){
