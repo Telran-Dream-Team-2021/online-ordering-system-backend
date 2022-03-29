@@ -49,7 +49,7 @@ public class AuthController {
         String accessToken = "Bearer " + this.jwtUtils.create(loginData.getEmail());
         log.debug("Login success");
 
-        return new AuthResponseDto(accessToken, user.getRole());
+        return new AuthResponseDto(accessToken, user.getRole(), user.getDisplayName(), user.getId());
     }
 
     private ResponseEntity<?> wrongAccount() {

@@ -9,6 +9,6 @@ import lombok.*;
 public class AuthResponseDto {
     private String accessToken;
     private Roles role;
-
-    // TODO more fields!
+    private String displayName;
+    private Long uid;
 }
