@@ -3,6 +3,7 @@ package telran.oos.service.implementation;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import telran.exceptions.ResourceNotFoundException;
 import telran.exceptions.WrongInputDataException;
 import telran.oos.api.dto.ProductDto;
@@ -11,7 +12,6 @@ import telran.oos.jpa.repository.CategoryRepository;
 import telran.oos.jpa.repository.ProductRepository;
 import telran.oos.service.CrudService;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Slf4j

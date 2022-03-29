@@ -22,7 +22,7 @@ import static telran.oos.api.ApiConstants.PRODUCT_MAPPING;
 public class ProductController {
     private final CrudService<ProductDto, Long> service;
 
-    public ProductController(@Qualifier("productServiceImpl") CrudService<ProductDto, Long> service) {
+    public ProductController(CrudService<ProductDto, Long> service) {
         this.service = service;
     }
 

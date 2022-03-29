@@ -15,5 +15,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("select new telran.oos.api.dto.ProductDto(id, name, category.name, description, imageUrl, price, unitOfMeasurement, active) from Product")
     List<ProductDto> getAllProducts();
 
-
 }
