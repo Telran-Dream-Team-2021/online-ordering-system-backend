@@ -1,5 +1,5 @@
 package telran.oos.api.dto;
 
 public enum MeasurementUnit {
-    PIECE, KG, GR, L, ML
+    PIECES, GR_100, GR_500, KG
 }

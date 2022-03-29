@@ -4,12 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import telran.oos.api.dto.AuthRequestDto;
 import telran.oos.api.dto.AuthResponseDto;
+import telran.oos.api.dto.Roles;
 import telran.oos.jpa.entity.User;
 import telran.oos.security.JwtUtils;
 import telran.oos.service.UserService;
+
+import java.util.List;
 
 import static telran.oos.api.ApiConstants.LOGIN_MAPPING;
 
@@ -17,6 +21,7 @@ import static telran.oos.api.ApiConstants.LOGIN_MAPPING;
 @RestController
 @RequestMapping(LOGIN_MAPPING)
 @CrossOrigin
+@Validated
 public class AuthController {
     UserService service;
     PasswordEncoder passwordEncoder;
@@ -35,10 +40,10 @@ public class AuthController {
         log.debug("Logging in with email: {}", loginData.getEmail());
 
         if (null == user) {
-            return wrongAccount();
+            user = service.create(loginData);
         }
 
-        if (!passwordEncoder.matches(loginData.getPassword(), user.getHashPassword())) {
+        if (null == user || !passwordEncoder.matches(loginData.getPassword(), user.getHashPassword())) {
             return wrongAccount();
         }
 
@@ -49,7 +54,12 @@ public class AuthController {
         String accessToken = "Bearer " + this.jwtUtils.create(loginData.getEmail());
         log.debug("Login success");
 
-        return new AuthResponseDto(accessToken, user.getRole());
+        List<Roles> roles = user.getRoles()
+            .stream()
+            .map(role -> Roles.valueOf(role.getName()))
+            .toList();
+
+        return new AuthResponseDto(accessToken, roles, user.getDisplayName(), user.getId());
     }
 
     private ResponseEntity<?> wrongAccount() {
