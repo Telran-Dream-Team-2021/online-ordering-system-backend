@@ -18,8 +18,8 @@ public class OrderItem {
     @ManyToOne
     private Product product;
 
-    @Column(nullable = false)
+    @Column
     private Float pricePerUnit;
-    @Column(nullable = false)
+    @Column
     private int quantity;
 }
