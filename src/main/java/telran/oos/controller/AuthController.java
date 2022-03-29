@@ -7,9 +7,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import telran.oos.api.dto.AuthRequestDto;
 import telran.oos.api.dto.AuthResponseDto;
+import telran.oos.api.dto.Roles;
+import telran.oos.jpa.entity.Role;
 import telran.oos.jpa.entity.User;
 import telran.oos.security.JwtUtils;
 import telran.oos.service.UserService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static telran.oos.api.ApiConstants.LOGIN_MAPPING;
 
@@ -35,6 +40,8 @@ public class AuthController {
         log.debug("Logging in with email: {}", loginData.getEmail());
 
         if (null == user) {
+            // TODO registration может быть с фронта присылать exists и если нету то предупреждать что будет регистрация?
+            // может быть даже ендпоинт поменять
             return wrongAccount();
         }
 
@@ -49,7 +56,12 @@ public class AuthController {
         String accessToken = "Bearer " + this.jwtUtils.create(loginData.getEmail());
         log.debug("Login success");
 
-        return new AuthResponseDto(accessToken, user.getRole(), user.getDisplayName(), user.getId());
+        List<Roles> roles = user.getRoles()
+            .stream()
+            .map(role -> Roles.valueOf(role.getName()))
+            .toList();
+
+        return new AuthResponseDto(accessToken, roles, user.getDisplayName(), user.getId());
     }
 
     private ResponseEntity<?> wrongAccount() {

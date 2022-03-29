@@ -9,6 +9,7 @@ import telran.exceptions.ResourceNotFoundException;
 import telran.oos.api.dto.ProductDto;
 import telran.oos.api.dto.Roles;
 import telran.oos.api.dto.UserDto;
+import telran.oos.jpa.entity.Role;
 import telran.oos.jpa.entity.User;
 import telran.oos.service.UserService;
 
@@ -34,8 +35,8 @@ public class UserController {
         if (authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser")) {
             User user = (User) authentication.getPrincipal();
 
-            if (Objects.equals(user.getId(), id) || user.getRole() == Roles.ADMIN) {
-                log.info("Getting userData with id = {} | {}", id, user.getRole());
+            if (Objects.equals(user.getId(), id) || user.isAdmin()) {
+                log.info("Getting userData with id = {} | {}", id, user.getRoles().stream().map(Role::getName).toList());
                 return service.read(id);
             }
         }

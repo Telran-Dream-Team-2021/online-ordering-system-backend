@@ -9,6 +9,6 @@ import telran.oos.jpa.entity.User;
 public interface UserRepository extends JpaRepository<User, Long> {
      User findByEmail(String email);
 
-     @Query("select new telran.oos.api.dto.UserDto(id, role, displayName, deliveryAddress, email) from User where id = :id")
+     @Query("select new telran.oos.api.dto.UserDto(id, displayName, deliveryAddress, email) from User where id = :id")
      UserDto getUserById(@Param("id") Long id);
 }
