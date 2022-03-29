@@ -4,16 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import telran.oos.api.dto.AuthRequestDto;
 import telran.oos.api.dto.AuthResponseDto;
 import telran.oos.api.dto.Roles;
-import telran.oos.jpa.entity.Role;
 import telran.oos.jpa.entity.User;
 import telran.oos.security.JwtUtils;
 import telran.oos.service.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static telran.oos.api.ApiConstants.LOGIN_MAPPING;
@@ -22,6 +21,7 @@ import static telran.oos.api.ApiConstants.LOGIN_MAPPING;
 @RestController
 @RequestMapping(LOGIN_MAPPING)
 @CrossOrigin
+@Validated
 public class AuthController {
     UserService service;
     PasswordEncoder passwordEncoder;
@@ -40,12 +40,10 @@ public class AuthController {
         log.debug("Logging in with email: {}", loginData.getEmail());
 
         if (null == user) {
-            // TODO registration может быть с фронта присылать exists и если нету то предупреждать что будет регистрация?
-            // может быть даже ендпоинт поменять
-            return wrongAccount();
+            user = service.create(loginData);
         }
 
-        if (!passwordEncoder.matches(loginData.getPassword(), user.getHashPassword())) {
+        if (null == user || !passwordEncoder.matches(loginData.getPassword(), user.getHashPassword())) {
             return wrongAccount();
         }
 
