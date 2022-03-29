@@ -27,4 +27,17 @@ public class Order {
     private LocalDateTime deliveryDate;
     @Column
     private LocalDateTime lastEditionDate;
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", orderItems=" + orderItems.size() +
+                ", user=" + user +
+                ", deliveryAddress='" + deliveryAddress + '\'' +
+                ", status=" + status +
+                ", deliveryDate=" + deliveryDate +
+                ", lastEditionDate=" + lastEditionDate +
+                '}';
+    }
 }

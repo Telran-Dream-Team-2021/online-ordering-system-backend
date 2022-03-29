@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@Table(name = "order-items")
+@Table(name = "order_items")
 public class OrderItem {
     @Id
     private Long id;
@@ -22,4 +22,14 @@ public class OrderItem {
     private Float pricePerUnit;
     @Column
     private int quantity;
+
+    public OrderItem() {
+    }
+
+    public OrderItem(Order order, Product product) {
+        this.order = order;
+        this.product = product;
+    }
+
+
 }
