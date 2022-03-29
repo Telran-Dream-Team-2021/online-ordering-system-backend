@@ -2,23 +2,20 @@ package telran.oos.api.dto;
 
 import lombok.*;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
-    // TODO validation rules and username -> id
+    @NotNull
     private Long uid;
-    private boolean isAdmin;
+    @NotEmpty
     private String displayName;
+    @NotEmpty
     private String deliveryAddress;
+    @NotNull
     private String email;
-
-    public UserDto(Long id, Roles role, String displayName, String deliveryAddress, String email) {
-        this.uid = id;
-        this.isAdmin = role == Roles.ADMIN;
-        this.displayName = displayName;
-        this.deliveryAddress = deliveryAddress;
-        this.email = email;
-    }
 }
