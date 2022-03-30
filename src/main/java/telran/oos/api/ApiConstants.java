@@ -8,6 +8,10 @@ public interface ApiConstants {
     String USER_MAPPING = API_MAPPING + "/users";
     String PRODUCT_MAPPING = API_MAPPING + "/products";
     String CATEGORY_MAPPING = API_MAPPING + "/categories";
+    /* WebSockets configuration */
+    String WEBSOCKET_MAPPING = "/websocket-oos/v1/**";
+    String WEBSOCKET_BROKER_MAPPING = "/topics";
+    String WEBSOCKET_PRODUCT_THEME = WEBSOCKET_BROKER_MAPPING + "/products";
     /*  products constraints */
     int MIN_PRODUCT_NAME_LENGTH = 3;
     int MAX_PRODUCT_NAME_LENGTH = 30;
