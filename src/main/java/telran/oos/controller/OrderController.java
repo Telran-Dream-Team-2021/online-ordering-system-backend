@@ -40,7 +40,7 @@ public class OrderController {
 
     @PostMapping
     public OrderDto addOrder(@RequestBody OrderDto order){
-        log.info("Adding order new order");
+        log.info("Adding new order with id = {}", order.getId());
         return orderService.create(order);
     }
 

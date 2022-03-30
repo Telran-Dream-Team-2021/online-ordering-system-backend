@@ -33,6 +33,7 @@ public class OrderServiceImpl implements CrudService<OrderDto, Long> {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -44,12 +45,12 @@ public class OrderServiceImpl implements CrudService<OrderDto, Long> {
 
     @Override
     public OrderDto read(Long id) {
-        return null;
+        return convertToDto(orderRepository.findById(id).orElseThrow());
     }
 
     @Override
     public List<OrderDto> getAll() {
-        return null;
+        return orderRepository.findAll().stream().map(this::convertToDto).toList();
     }
 
     @Override
@@ -63,17 +64,17 @@ public class OrderServiceImpl implements CrudService<OrderDto, Long> {
     }
 
     private OrderDto convertToDto(Order order){
+        log.debug(order.toString());
         OrderDto res = modelMapper.map(order, OrderDto.class);
-        List<OrderItemDto> items = order.getOrderItems().stream().map(item->{
-            return new OrderItemDto(item.getId(),
-                    item.getOrder().getId(),
-                    item.getProduct().getId(),
-                    item.getPricePerUnit(),
-                    item.getQuantity()
-            );
-        }).toList();
+        List<OrderItemDto> items = order.getOrderItems().stream().map(item-> new OrderItemDto(item.getId(),
+                item.getOrder().getId(),
+                item.getProduct().getId(),
+                item.getPricePerUnit(),
+                item.getQuantity()
+        )).toList();
         res.setOrderItems(items);
         res.setUserId(order.getUser().getId());
+        log.debug(res.toString());
         return res;
     }
 
