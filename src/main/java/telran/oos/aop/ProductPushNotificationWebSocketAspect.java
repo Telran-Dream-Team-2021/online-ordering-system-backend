@@ -26,9 +26,23 @@ public class ProductPushNotificationWebSocketAspect {
 
     @Around("execution(* telran.oos.service..create(..))")
     Object sendCreateMessage(ProceedingJoinPoint jp) throws Throwable {
-        log.debug("Advice CREATED intercepted method");
+        log.debug("Advice CREATE intercepted method");
         String theme = getTheme(jp);
         return proceed(jp, theme, "created");
+    }
+
+    @Around("execution(* telran.oos.service..update(..))")
+    Object sendUpdateMessage(ProceedingJoinPoint jp) throws Throwable {
+        log.debug("Advice UPDATE intercepted method");
+        String theme = getTheme(jp);
+        return proceed(jp, theme, "updated");
+    }
+
+    @Around("execution(* telran.oos.service..remove(..))")
+    Object sendRemoveMessage(ProceedingJoinPoint jp) throws Throwable {
+        log.debug("Advice REMOVE intercepted method");
+        String theme = getTheme(jp);
+        return proceed(jp, theme, "removed");
     }
 
     private String getTheme(ProceedingJoinPoint jp) {
