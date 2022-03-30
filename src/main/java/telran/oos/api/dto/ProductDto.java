@@ -3,6 +3,7 @@ package telran.oos.api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.validator.constraints.URL;
+import telran.oos.aop.inter.Idable;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -15,7 +16,7 @@ import static telran.oos.api.ApiConstants.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDto {
+public class ProductDto implements Idable {
     @NotNull
     private Long id;
     @NotNull @Size(min = MIN_PRODUCT_NAME_LENGTH, max = MAX_PRODUCT_NAME_LENGTH)
