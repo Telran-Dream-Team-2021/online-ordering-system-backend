@@ -1,10 +1,11 @@
 package telran.oos.service.implementation;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.stereotype.Service;
+import telran.exceptions.ResourceNotFoundException;
+import telran.oos.aop.inter.WebSocketMessagable;
 import telran.oos.api.dto.BasketDto;
 import telran.oos.documents.BasketDoc;
 import telran.oos.jpa.repository.BasketRepository;
@@ -13,11 +14,13 @@ import telran.oos.service.CrudService;
 import java.util.List;
 import java.util.Objects;
 
+import static telran.oos.api.ApiConstants.WEBSOCKET_BASKET_THEME;
+
 @Slf4j
 @Service
-public class BasketServiceImpl implements CrudService<BasketDto, Long> {
-    private BasketRepository basketRepository;
-    private MongoTemplate mongoTemplate;
+public class BasketServiceImpl implements CrudService<BasketDto, Long>, WebSocketMessagable {
+    private final BasketRepository basketRepository;
+    private final MongoTemplate mongoTemplate;
 
     public BasketServiceImpl(BasketRepository basketRepository, MongoTemplate mongoTemplate) {
         this.basketRepository = basketRepository;
@@ -32,12 +35,18 @@ public class BasketServiceImpl implements CrudService<BasketDto, Long> {
 
     @Override
     public BasketDto read(Long id) {
-        return null;
+        if (!basketRepository.existsById(id)) {
+            log.error("There is no basket with id {} id DB", id);
+            throw new ResourceNotFoundException(String.format(
+                    "Basket wth id %d does not exist", id
+            ));
+        }
+        return basketRepository.getBasketById(id);
     }
 
     @Override
     public List getAll() {
-        return null;
+        return basketRepository.findAll();
     }
 
     @Override
@@ -47,7 +56,15 @@ public class BasketServiceImpl implements CrudService<BasketDto, Long> {
 
     @Override
     public BasketDto remove(Long id) {
-        return null;
+        if (!basketRepository.existsById(id)) {
+            log.error("There is no basket with id {} id DB", id);
+            throw new ResourceNotFoundException(String.format(
+                    "Basket wth id %d does not exist", id
+            ));
+        }
+        BasketDto itemToRemove = basketRepository.getBasketById(id);
+        basketRepository.deleteById(id);
+        return itemToRemove;
     }
 
     public List<String> nativeQuery(String queryJson) {
@@ -56,4 +73,8 @@ public class BasketServiceImpl implements CrudService<BasketDto, Long> {
         return res.stream().map(Objects::toString).toList();
     }
 
+    @Override
+    public String getTheme() {
+        return WEBSOCKET_BASKET_THEME;
+    }
 }

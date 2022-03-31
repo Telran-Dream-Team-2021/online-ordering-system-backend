@@ -14,6 +14,7 @@ public interface ApiConstants {
     String WEBSOCKET_MAPPING = "/websocket-oos/v1/**";
     String WEBSOCKET_BROKER_MAPPING = "/topics";
     String WEBSOCKET_PRODUCT_THEME = WEBSOCKET_BROKER_MAPPING + "/products";
+    String WEBSOCKET_BASKET_THEME = WEBSOCKET_BROKER_MAPPING + "/baskets";
 
     /*  products constraints */
     int MIN_PRODUCT_NAME_LENGTH = 3;
