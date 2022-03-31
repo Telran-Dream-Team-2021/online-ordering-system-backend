@@ -8,6 +8,7 @@ public interface ApiConstants {
     String USER_MAPPING = API_MAPPING + "/users";
     String PRODUCT_MAPPING = API_MAPPING + "/products";
     String CATEGORY_MAPPING = API_MAPPING + "/categories";
+    String BASKET_MAPPING = API_MAPPING + "/baskets";
     /*  products constraints */
     int MIN_PRODUCT_NAME_LENGTH = 3;
     int MAX_PRODUCT_NAME_LENGTH = 30;

@@ -11,7 +11,9 @@ import java.util.List;
 @NoArgsConstructor
 public class BasketDto {
     // TODO validation rules
+    @NonNull
     private Long id;
+    @NonNull
     private Long userId;
     private List<OrderItemDto> basketItems;
 }
