@@ -10,7 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BasketDto {
-    // TODO validation rules
     @NonNull
     private Long id;
     @NonNull
