@@ -18,6 +18,7 @@ import static telran.oos.api.ApiConstants.*;
 @NoArgsConstructor
 public class ProductDto implements Idable {
     @NotNull
+    @JsonProperty("productId")
     private Long id;
     @NotNull @Size(min = MIN_PRODUCT_NAME_LENGTH, max = MAX_PRODUCT_NAME_LENGTH)
     private String name;
