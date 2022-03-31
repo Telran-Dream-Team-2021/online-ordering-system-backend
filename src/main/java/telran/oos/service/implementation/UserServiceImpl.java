@@ -7,19 +7,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import telran.exceptions.ResourceNotFoundException;
+import telran.oos.aop.inter.WebSocketMessagable;
 import telran.oos.api.dto.AuthRequestDto;
 import telran.oos.api.dto.Roles;
 import telran.oos.api.dto.UserDto;
 import telran.oos.jpa.entity.Role;
 import telran.oos.jpa.entity.User;
-import telran.oos.jpa.repository.RoleRepository;
 import telran.oos.jpa.repository.UserRepository;
 import telran.oos.service.UserService;
 
 import java.util.Collections;
 
+import static telran.oos.api.ApiConstants.WEBSOCKET_USER_THEME;
+
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, WebSocketMessagable {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -30,7 +32,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto read(Long id) {
-        return userRepository.getUserById(id);
+        UserDto userDto = userRepository.getUserById(id);
+
+        if (userDto == null) {
+            throw new ResourceNotFoundException(String.format("User with id %d not found.", id));
+        }
+
+        return userDto;
     }
 
     @Override
@@ -82,5 +90,10 @@ public class UserServiceImpl implements UserService {
         }
 
         return user;
+    }
+
+    @Override
+    public String getTheme() {
+        return WEBSOCKET_USER_THEME;
     }
 }

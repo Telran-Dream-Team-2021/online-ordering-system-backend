@@ -19,26 +19,26 @@ import telran.oos.aop.inter.WebSocketMessagable;
 @Service
 @Aspect
 public class ProductPushNotificationWebSocketAspect {
-    private SimpMessagingTemplate smt;
+    private final SimpMessagingTemplate smt;
     public ProductPushNotificationWebSocketAspect(SimpMessagingTemplate smt) {
         this.smt = smt;
     }
 
-    @Around("execution(* telran.oos.service..create(..))")
+    @Around("execution(* telran.oos.service.CrudService.create(..))")
     Object sendCreateMessage(ProceedingJoinPoint jp) throws Throwable {
         log.debug("Advice CREATE intercepted method");
         String theme = getTheme(jp);
         return proceed(jp, theme, "created");
     }
 
-    @Around("execution(* telran.oos.service..update(..))")
+    @Around("execution(* telran.oos.service.CrudService.update(..))")
     Object sendUpdateMessage(ProceedingJoinPoint jp) throws Throwable {
         log.debug("Advice UPDATE intercepted method");
         String theme = getTheme(jp);
         return proceed(jp, theme, "updated");
     }
 
-    @Around("execution(* telran.oos.service..remove(..))")
+    @Around("execution(* telran.oos.service.CrudService.remove(..))")
     Object sendRemoveMessage(ProceedingJoinPoint jp) throws Throwable {
         log.debug("Advice REMOVE intercepted method");
         String theme = getTheme(jp);
