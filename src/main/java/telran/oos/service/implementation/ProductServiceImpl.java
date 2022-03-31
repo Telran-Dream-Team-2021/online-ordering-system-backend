@@ -6,20 +6,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import telran.exceptions.ResourceNotFoundException;
 import telran.exceptions.WrongInputDataException;
+import telran.oos.aop.inter.WebSocketMessagable;
 import telran.oos.api.dto.ProductDto;
 import telran.oos.jpa.entity.Product;
 import telran.oos.jpa.repository.CategoryRepository;
 import telran.oos.jpa.repository.ProductRepository;
 import telran.oos.service.CrudService;
+import static telran.oos.api.ApiConstants.*;
 
 import java.util.List;
 
 @Slf4j
 @Service
-public class ProductServiceImpl implements CrudService<ProductDto, Long> {
+public class ProductServiceImpl implements CrudService<ProductDto, Long>, WebSocketMessagable {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
+    private final String theme = WEBSOCKET_PRODUCT_THEME;
 
     public ProductServiceImpl(ProductRepository repository, CategoryRepository categoryRepository,
                               ModelMapper modelMapper) {
@@ -84,5 +87,10 @@ public class ProductServiceImpl implements CrudService<ProductDto, Long> {
         product.setCategory(categoryRepository.findByName(productDto.getCategoryName()));
         log.debug(product.toString());
         return product;
+    }
+
+    @Override
+    public String getTheme() {
+        return theme;
     }
 }
