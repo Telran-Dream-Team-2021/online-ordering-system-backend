@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -35,8 +36,18 @@ public class OosSecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(authJwtFilter, UsernamePasswordAuthenticationFilter.class);
-        http.authorizeHttpRequests()
+        http
+            .authorizeHttpRequests()
+                .antMatchers(WEBSOCKET_MAPPING, LOGIN_MAPPING).permitAll()
+                .and()
+            .authorizeHttpRequests()
                 .antMatchers(USER_MAPPING + "/**").authenticated()
-                .antMatchers("/**").permitAll();
+                .and()
+            .authorizeHttpRequests()
+                .antMatchers(HttpMethod.GET, PRODUCT_MAPPING + "/**").permitAll()
+                .antMatchers( PRODUCT_MAPPING + "/**").authenticated()
+                .and()
+            .authorizeHttpRequests()
+                .anyRequest().permitAll();
     }
 }
