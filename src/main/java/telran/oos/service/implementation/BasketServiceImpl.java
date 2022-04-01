@@ -1,6 +1,7 @@
 package telran.oos.service.implementation;
 
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.stereotype.Service;
@@ -21,10 +22,12 @@ import static telran.oos.api.ApiConstants.WEBSOCKET_BASKET_THEME;
 public class BasketServiceImpl implements CrudService<BasketDto, Long>, WebSocketMessagable {
     private final BasketRepository basketRepository;
     private final MongoTemplate mongoTemplate;
+    private final ModelMapper modelMapper;
 
-    public BasketServiceImpl(BasketRepository basketRepository, MongoTemplate mongoTemplate) {
+    public BasketServiceImpl(BasketRepository basketRepository, MongoTemplate mongoTemplate, ModelMapper modelMapper) {
         this.basketRepository = basketRepository;
         this.mongoTemplate = mongoTemplate;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -35,12 +38,7 @@ public class BasketServiceImpl implements CrudService<BasketDto, Long>, WebSocke
 
     @Override
     public BasketDto read(Long id) {
-        if (!basketRepository.existsById(id)) {
-            log.error("There is no basket with id {} id DB", id);
-            throw new ResourceNotFoundException(String.format(
-                    "Basket wth id %d does not exist", id
-            ));
-        }
+        validateIfExists(id);
         return basketRepository.getBasketById(id);
     }
 
@@ -51,20 +49,26 @@ public class BasketServiceImpl implements CrudService<BasketDto, Long>, WebSocke
 
     @Override
     public BasketDto update(Long id, BasketDto newEntity) {
-        return null;
+        BasketDto oldBasketDto = read(id);
+        basketRepository.save(convertToEntity(newEntity));
+        return oldBasketDto;
     }
 
     @Override
     public BasketDto remove(Long id) {
+        validateIfExists(id);
+        BasketDto itemToRemove = basketRepository.getBasketById(id);
+        basketRepository.deleteById(id);
+        return itemToRemove;
+    }
+
+    private void validateIfExists(Long id) {
         if (!basketRepository.existsById(id)) {
             log.error("There is no basket with id {} id DB", id);
             throw new ResourceNotFoundException(String.format(
                     "Basket wth id %d does not exist", id
             ));
         }
-        BasketDto itemToRemove = basketRepository.getBasketById(id);
-        basketRepository.deleteById(id);
-        return itemToRemove;
     }
 
     public List<String> nativeQuery(String queryJson) {
@@ -76,5 +80,9 @@ public class BasketServiceImpl implements CrudService<BasketDto, Long>, WebSocke
     @Override
     public String getTheme() {
         return WEBSOCKET_BASKET_THEME;
+    }
+
+    private BasketDoc convertToEntity(BasketDto basketDto) {
+        return modelMapper.map(basketDto, BasketDoc.class);
     }
 }
