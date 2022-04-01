@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import telran.exceptions.ResourceNotFoundException;
+import telran.oos.aop.inter.WebSocketMessagable;
 import telran.oos.api.dto.OrderDto;
 import telran.oos.api.dto.OrderItemDto;
 import telran.oos.jpa.entity.Order;
@@ -21,9 +22,11 @@ import org.modelmapper.ModelMapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import static telran.oos.api.ApiConstants.WEBSOCKET_ORDER_THEME;
+
 @Slf4j
 @Service
-public class OrderServiceImpl implements CrudService<OrderDto, Long> {
+public class OrderServiceImpl implements CrudService<OrderDto, Long>, WebSocketMessagable {
     OrderRepository orderRepository;
     OrderItemRepository orderItemRepository;
     ProductRepository productRepository;
@@ -111,5 +114,10 @@ public class OrderServiceImpl implements CrudService<OrderDto, Long> {
         order.setUser(user);
         log.debug("order entity = {}", order.toString());
         return order;
+    }
+
+    @Override
+    public String getTheme() {
+        return WEBSOCKET_ORDER_THEME;
     }
 }

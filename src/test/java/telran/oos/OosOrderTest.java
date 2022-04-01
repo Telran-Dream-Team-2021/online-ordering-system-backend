@@ -167,13 +167,13 @@ public class OosOrderTest {
 
     @Test @Order(5)
     void deletionOrders() throws Exception {
-//        String resJSON = mockMvc.perform(
-//                MockMvcRequestBuilders.delete(ORDER_MAPPING + "/1")
-//        ).andReturn().getResponse().getContentAsString();
-        OrderDto order = orders.remove(1l);
+        String resJSON = mockMvc.perform(
+                MockMvcRequestBuilders.delete(ORDER_MAPPING + "/1")
+        ).andReturn().getResponse().getContentAsString();
+
+        OrderDto order = mapper.readValue(resJSON, OrderDto.class);
         System.out.println(orders.getAll().size());
         System.out.println(order);
-//        OrderDto order = mapper.readValue(resJSON, OrderDto.class);
 //        assertEquals("wall-street", order.getDeliveryAddress());
 //        assertEquals(0, orders.getAll().size());
     }

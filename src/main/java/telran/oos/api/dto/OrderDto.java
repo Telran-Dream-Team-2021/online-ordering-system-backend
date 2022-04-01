@@ -6,6 +6,8 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import telran.oos.aop.inter.Idable;
 import telran.oos.utils.JsonDateDeserializer;
 import telran.oos.utils.JsonDateSerializer;
 
@@ -13,7 +15,7 @@ import telran.oos.utils.JsonDateSerializer;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDto {
+public class OrderDto implements Idable {
     // TODO validation rules
     private Long id;
     private List<OrderItemDto> orderItems;

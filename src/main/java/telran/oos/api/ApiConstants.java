@@ -14,6 +14,7 @@ public interface ApiConstants {
     String WEBSOCKET_BROKER_MAPPING = "/topics";
     String WEBSOCKET_PRODUCT_THEME = WEBSOCKET_BROKER_MAPPING + "/products";
     String WEBSOCKET_USER_THEME = WEBSOCKET_BROKER_MAPPING + "/users";
+    String WEBSOCKET_ORDER_THEME = WEBSOCKET_BROKER_MAPPING + "/orders";
     /*  products constraints */
     int MIN_PRODUCT_NAME_LENGTH = 3;
     int MAX_PRODUCT_NAME_LENGTH = 30;
