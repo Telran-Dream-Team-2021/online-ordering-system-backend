@@ -43,9 +43,6 @@ public class OosOrderTest {
     @Autowired
     OrderServiceImpl orders;
 
-
-
-
     @Test
     void contextLoads() {
         assertNotNull(mockMvc);
@@ -151,7 +148,8 @@ public class OosOrderTest {
         assertEquals("wall-street", oldOrder.getDeliveryAddress());
 
         OrderDto updatedOrder = orders.read(1l);
-
+        System.out.println(updatedOrder);
+        updatedOrder.getOrderItems().forEach(i-> System.out.println(i.getProductId()));
         assertEquals(1l, updatedOrder.getId());
         assertEquals(2, updatedOrder.getOrderItems().size());
         ProductDto product1 = products.read(updatedOrder.getOrderItems().get(0).getProductId());
@@ -174,8 +172,8 @@ public class OosOrderTest {
         OrderDto order = mapper.readValue(resJSON, OrderDto.class);
         System.out.println(orders.getAll().size());
         System.out.println(order);
-//        assertEquals("wall-street", order.getDeliveryAddress());
-//        assertEquals(0, orders.getAll().size());
+        assertEquals("wall-street", order.getDeliveryAddress());
+        assertEquals(0, orders.getAll().size());
     }
 
 

@@ -67,8 +67,9 @@ public class OrderServiceImpl implements CrudService<OrderDto, Long>, WebSocketM
     public OrderDto update(Long id, OrderDto newOrder) {
         OrderDto res = read(id);
         if(res!=null){
+            remove(id);
             newOrder.setId(id);
-            orderRepository.save(convertToEntity(newOrder));
+            create(newOrder);
         }
         return res;
     }

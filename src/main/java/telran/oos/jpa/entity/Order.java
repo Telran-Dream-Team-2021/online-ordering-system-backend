@@ -17,7 +17,7 @@ import java.util.List;
 public class Order {
     @Id
     private Long id;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<OrderItem> orderItems;
     @ManyToOne
     private User user;

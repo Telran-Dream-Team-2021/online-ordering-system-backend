@@ -1,11 +1,16 @@
 package telran.oos.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import telran.oos.api.dto.OrderDto;
+import telran.oos.jpa.entity.User;
 import telran.oos.service.CrudService;
 
 import java.util.List;
+import java.util.Objects;
 
 import static telran.oos.api.ApiConstants.ORDER_MAPPING;
 
@@ -22,18 +27,27 @@ public class OrderController {
 
     @GetMapping
     public List<OrderDto> getAllOrders(){
+        if(!isAdmin()){
+            throw new AccessDeniedException("Access denied");
+        }
         log.info("Getting all orders");
         return orderService.getAll();
     }
 
     @GetMapping("/{id}")
     public OrderDto getOrder(@PathVariable Long id){
+        if(wrongAuth(id)){
+            throw new AccessDeniedException("Access denied");
+        }
         log.info("Getting order with id = {}", id);
         return orderService.read(id);
     }
 
     @DeleteMapping("/{id}")
     public OrderDto deleteOrder(@PathVariable long id){
+        if(wrongAuth(id)){
+            throw new AccessDeniedException("Access denied");
+        }
         log.info("Deleting order with id = {}", id);
         return orderService.remove(id);
     }
@@ -46,9 +60,33 @@ public class OrderController {
 
     @PutMapping("/{id}")
     public OrderDto updateOrder(@PathVariable long id, @RequestBody OrderDto order){
+        if(wrongAuth(id)){
+            throw new AccessDeniedException("Access denied");
+        }
         log.info("Updating order with id = {}", id);
         return orderService.update(id, order);
     }
 
+    private boolean wrongAuth(Long id) {
+        OrderDto order = orderService.read(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser")) {
+            User user = (User) authentication.getPrincipal();
+
+            return !Objects.equals(user.getId(), order.getUserId()) && !user.isAdmin();
+        }
+
+        return true;
+    }
+
+    private boolean isAdmin(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser")) {
+            User user = (User) authentication.getPrincipal();
+            return user.isAdmin();
+        }
+        return false;
+    }
 
 }
