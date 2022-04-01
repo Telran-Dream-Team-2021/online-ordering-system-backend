@@ -49,6 +49,7 @@ public class BasketServiceImpl implements CrudService<BasketDto, Long>, WebSocke
 
     @Override
     public BasketDto update(Long id, BasketDto newEntity) {
+        validateIfExists(id);
         BasketDto oldBasketDto = read(id);
         basketRepository.save(convertToEntity(newEntity));
         return oldBasketDto;
