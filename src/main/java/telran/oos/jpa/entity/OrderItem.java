@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Setter
 @Table(name = "order_items")
 public class OrderItem {
-    @Id
+    @Id @GeneratedValue
     private Long id;
 
     @ManyToOne

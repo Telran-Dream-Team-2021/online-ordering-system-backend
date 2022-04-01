@@ -2,6 +2,8 @@ package telran.oos.jpa.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import telran.oos.api.dto.OrderStatus;
 
 import javax.persistence.*;
@@ -15,7 +17,7 @@ import java.util.List;
 public class Order {
     @Id
     private Long id;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<OrderItem> orderItems;
     @ManyToOne
     private User user;
@@ -33,7 +35,7 @@ public class Order {
         return "Order{" +
                 "id=" + id +
                 ", orderItems=" + orderItems.size() +
-                ", user=" + user +
+                ", user=" + user.getEmail() +
                 ", deliveryAddress='" + deliveryAddress + '\'' +
                 ", status=" + status +
                 ", deliveryDate=" + deliveryDate +
