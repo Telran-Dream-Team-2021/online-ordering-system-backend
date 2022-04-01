@@ -35,8 +35,22 @@ public class OosSecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(authJwtFilter, UsernamePasswordAuthenticationFilter.class);
-        http.authorizeHttpRequests()
+        http
+            .authorizeHttpRequests()
+                .antMatchers(WEBSOCKET_MAPPING, LOGIN_MAPPING).permitAll()
+                .and()
+            .authorizeHttpRequests()
                 .antMatchers(USER_MAPPING + "/**").authenticated()
-                .antMatchers("/**").permitAll();
+                .and()
+            .authorizeHttpRequests()
+                .antMatchers(HttpMethod.GET, PRODUCT_MAPPING + "/**").permitAll()
+                .antMatchers( PRODUCT_MAPPING + "/**").hasAuthority(ADMIN)
+                .and()
+            .authorizeHttpRequests()
+                .antMatchers(BASKET_MAPPING + "/**").authenticated()
+                .and()
+            .authorizeHttpRequests()
+                .anyRequest().permitAll();
+
     }
 }
