@@ -7,10 +7,12 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderItemDto {
-    // TODO validation rules
     private Long id;
     private Long orderId;
+    @NonNull
     private Long productId;
+    @NonNull
     private Float pricePerUnit;
+    @NonNull
     private int quantity;
 }
