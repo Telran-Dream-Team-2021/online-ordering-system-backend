@@ -9,6 +9,11 @@ public interface ApiConstants {
     String PRODUCT_MAPPING = API_MAPPING + "/products";
     String CATEGORY_MAPPING = API_MAPPING + "/categories";
     String ORDER_MAPPING = API_MAPPING + "/orders";
+    /* WebSockets configuration */
+    String WEBSOCKET_MAPPING = "/websocket-oos/v1/**";
+    String WEBSOCKET_BROKER_MAPPING = "/topics";
+    String WEBSOCKET_PRODUCT_THEME = WEBSOCKET_BROKER_MAPPING + "/products";
+    String WEBSOCKET_USER_THEME = WEBSOCKET_BROKER_MAPPING + "/users";
     /*  products constraints */
     int MIN_PRODUCT_NAME_LENGTH = 3;
     int MAX_PRODUCT_NAME_LENGTH = 30;
@@ -19,4 +24,6 @@ public interface ApiConstants {
     int MIN_PRODUCT_PRICE = 1;
     int MAX_PRODUCT_PRICE = 10_000;
 
+    String ADMIN = Roles.ROLE_ADMIN.toString();
+    String USER = Roles.ROLE_USER.toString();
 }
