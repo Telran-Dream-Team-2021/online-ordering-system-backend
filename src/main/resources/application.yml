@@ -8,8 +8,8 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     password: ${POSTGRES_PWD}
-    url: jdbc:postgresql://localhost:5432/oos
-    username: postgres
+    url: jdbc:postgresql://ec2-176-34-211-0.eu-west-1.compute.amazonaws.com:5432/d6qavic7m5rbhp
+    username: usajcaezdjijgv
   jpa:
     hibernate:
       ddl-auto: create-drop
