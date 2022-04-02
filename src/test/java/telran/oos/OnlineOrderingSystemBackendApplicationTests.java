@@ -11,19 +11,29 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@AutoConfigureMockMvc
-@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@SpringBootTest
+//@AutoConfigureMockMvc
+//@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+//@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+//@SpringBootTest
 class OnlineOrderingSystemBackendApplicationTests {
-    ObjectMapper mapper = new ObjectMapper();
-    @Autowired
-    MockMvc mockMvc;
+//    ObjectMapper mapper = new ObjectMapper();
+//    @Autowired
+//    MockMvc mockMvc;
     @Test
     void contextLoads() {
-        assertNotNull(mockMvc);
+//        assertNotNull(mockMvc);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime date = LocalDateTime.now();
+        String dateString = date.format(formatter);
+        System.out.println(dateString);
+        LocalDateTime secondDate = LocalDateTime.parse(dateString, formatter);
+
+        System.out.println(secondDate);
     }
 
 }

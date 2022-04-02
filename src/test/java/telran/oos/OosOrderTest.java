@@ -51,11 +51,13 @@ public class OosOrderTest {
     @Test @Order(1)
     void creatingUsers() throws Exception {
         AuthRequestDto user1 = new AuthRequestDto("first@mail.ru", "1234", "");
-            mockMvc.perform(
-                    MockMvcRequestBuilders.post(LOGIN_MAPPING)
-                        .contentType(MediaType.APPLICATION_JSON)
-                            .content(mapper.writeValueAsString(user1))
-            );
+//            mockMvc.perform(
+//                    MockMvcRequestBuilders.post(LOGIN_MAPPING)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                            .content(mapper.writeValueAsString(user1))
+//            );
+
+        users.create(user1);
 
         User user = users.read("first@mail.ru");
         System.out.println(user.getId());
@@ -104,12 +106,12 @@ public class OosOrderTest {
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );
-
-        mockMvc.perform(
-                MockMvcRequestBuilders.post(ORDER_MAPPING)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(order))
-        );
+        orders.create(order);
+//        mockMvc.perform(
+//                MockMvcRequestBuilders.post(ORDER_MAPPING)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(mapper.writeValueAsString(order))
+//        );
         assertEquals(1l, orders.read(1l).getId());
         assertEquals(1l, orders.read(1l).getUserId());
         assertEquals(1, orders.read(1l).getOrderItems().size());
@@ -133,14 +135,14 @@ public class OosOrderTest {
                 LocalDateTime.now()
         );
 
-        String resJSON = mockMvc.perform(
-                MockMvcRequestBuilders.put(ORDER_MAPPING + "/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(newOrder))
-        ).andReturn().getResponse().getContentAsString();
-
-        OrderDto oldOrder = mapper.readValue(resJSON, OrderDto.class);
-
+//        String resJSON = mockMvc.perform(
+//                MockMvcRequestBuilders.put(ORDER_MAPPING + "/1")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(mapper.writeValueAsString(newOrder))
+//        ).andReturn().getResponse().getContentAsString();
+//
+//        OrderDto oldOrder = mapper.readValue(resJSON, OrderDto.class);
+        OrderDto oldOrder = orders.update(1l, newOrder);
         assertEquals(1l, oldOrder.getId());
         assertEquals(1l, oldOrder.getUserId());
         assertEquals(1, oldOrder.getOrderItems().size());
@@ -165,11 +167,12 @@ public class OosOrderTest {
 
     @Test @Order(5)
     void deletionOrders() throws Exception {
-        String resJSON = mockMvc.perform(
-                MockMvcRequestBuilders.delete(ORDER_MAPPING + "/1")
-        ).andReturn().getResponse().getContentAsString();
-
-        OrderDto order = mapper.readValue(resJSON, OrderDto.class);
+//        String resJSON = mockMvc.perform(
+//                MockMvcRequestBuilders.delete(ORDER_MAPPING + "/1")
+//        ).andReturn().getResponse().getContentAsString();
+//
+//        OrderDto order = mapper.readValue(resJSON, OrderDto.class);
+        OrderDto order = orders.remove(1l);
         System.out.println(orders.getAll().size());
         System.out.println(order);
         assertEquals("wall-street", order.getDeliveryAddress());
