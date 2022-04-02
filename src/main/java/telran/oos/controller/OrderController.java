@@ -27,21 +27,30 @@ public class OrderController {
 
     @GetMapping
     public List<OrderDto> getAllOrders(){
-//        if(!isAdmin()){
-//            throw new AccessDeniedException("Access denied (getAllOrders)");
-//        }
-        log.info("Getting all orders");
-        return orderService.getAll();
+        User user = getUser();
+        if(user==null){
+            throw new AccessDeniedException("Access denied (getAllOrders)");
+        }
+
+        if(user.isAdmin()){
+            log.info("Getting all orders (admin)");
+            return orderService.getAll();
+        } else {
+            List<OrderDto> res = orderService.getAll();
+            log.info("Getting all orders by user id = {}", user.getId());
+            return res.stream().filter(orderDto -> orderDto.getUserId().equals(user.getId())).toList();
+        }
+
     }
 
     @GetMapping("/{id}")
-    public List<OrderDto> getOrdersByUser(@PathVariable Long id){
-//        if(wrongAuth(id)){
-//            throw new AccessDeniedException("Access denied (getOrder)");
-//        }
-        List<OrderDto> res = orderService.getAll();
-        log.info("Getting orders by user id = {}", id);
-        return res.stream().filter(orderDto -> orderDto.getUserId()==id).toList();
+    public OrderDto getOrder(@PathVariable Long id){
+        if(wrongAuth(id)){
+            throw new AccessDeniedException("Access denied (getOrder)");
+        }
+        OrderDto res = orderService.read(id);
+        log.info("Getting order by id = {}", id);
+        return res;
     }
 
     @DeleteMapping("/{id}")
@@ -68,25 +77,23 @@ public class OrderController {
         return orderService.update(id, order);
     }
 
-    private boolean wrongAuth(Long id) {
-        OrderDto order = orderService.read(id);
+    private User getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser")) {
-            User user = (User) authentication.getPrincipal();
+            return (User) authentication.getPrincipal();
+        }
 
+        return null;
+    }
+
+    private boolean wrongAuth(Long id) {
+        OrderDto order = orderService.read(id);
+        User user = getUser();
+        if(user!=null){
             return !Objects.equals(user.getId(), order.getUserId()) && !user.isAdmin();
         }
 
-        return true;
-    }
-
-    private boolean isAdmin(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser")) {
-            User user = (User) authentication.getPrincipal();
-            return user.isAdmin();
-        }
         return false;
     }
 

@@ -17,6 +17,6 @@ public class JsonDateSerializer extends JsonSerializer <LocalDateTime>{
     public void serialize(LocalDateTime date, JsonGenerator generator, SerializerProvider arg2)
             throws IOException, JsonProcessingException {
         final String dateString = date.format(this.formatter);
-        generator.writeString(dateString);
+        generator.writeString(dateString.replace("T", " ").substring(0, 19));
     }
 }

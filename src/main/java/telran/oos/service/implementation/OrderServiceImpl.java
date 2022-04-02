@@ -69,11 +69,13 @@ public class OrderServiceImpl implements CrudService<OrderDto, Long>, WebSocketM
     @Override
     @Transactional
     public OrderDto update(Long id, OrderDto newOrder) {
-        OrderDto res = read(id);
-        if(res!=null){
-            remove(id);
-            newOrder.setId(id);
-            create(newOrder);
+        Order oldOrder = orderRepository.findById(id).orElse(null);
+        OrderDto res = convertToDto(oldOrder);
+        if(oldOrder!=null){
+            oldOrder.getOrderItems().forEach(item->orderItemRepository.deleteById(item.getId()));
+            Order order = convertToEntity(newOrder);
+            order.setId(id);
+            orderRepository.save(order);
         }
         return res;
     }
@@ -87,7 +89,13 @@ public class OrderServiceImpl implements CrudService<OrderDto, Long>, WebSocketM
 
     private OrderDto convertToDto(Order order){
         log.debug(order.toString());
-        OrderDto res = modelMapper.map(order, OrderDto.class);
+        OrderDto res = new OrderDto();
+        res.setId(order.getId());
+        res.setUserId(order.getUser().getId());
+        res.setDeliveryAddress(order.getDeliveryAddress());
+        res.setStatus(order.getStatus());
+        res.setDeliveryDate(order.getDeliveryDate());
+        res.setLastEditionDate(order.getLastEditionDate());
         List<OrderItemDto> items = order.getOrderItems().stream().map(item-> new OrderItemDto(item.getId(),
                 item.getOrder().getId(),
                 item.getProduct().getId(),
@@ -95,7 +103,6 @@ public class OrderServiceImpl implements CrudService<OrderDto, Long>, WebSocketM
                 item.getQuantity()
         )).toList();
         res.setOrderItems(items);
-        res.setUserId(order.getUser().getId());
         log.debug(res.toString());
         return res;
     }
