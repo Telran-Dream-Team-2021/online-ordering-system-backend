@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/oos
+      uri: mongodb+srv://root:${MONGO_PWD}@cluster0.7rapd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
   sql:
     init:
       mode: always
