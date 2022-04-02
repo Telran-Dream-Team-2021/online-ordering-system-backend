@@ -20,7 +20,7 @@ spring:
 
 app:
   jwt:
-    secret: "1234"
+    secret: ${APP_SECRET}
 
 logging:
   level:

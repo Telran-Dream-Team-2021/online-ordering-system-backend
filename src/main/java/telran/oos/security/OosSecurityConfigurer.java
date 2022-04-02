@@ -50,6 +50,7 @@ public class OosSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .antMatchers(BASKET_MAPPING + "/**").authenticated()
                 .and()
             .authorizeHttpRequests()
+                .antMatchers(ORDER_MAPPING + "/**").authenticated()
                 .anyRequest().permitAll();
 
     }

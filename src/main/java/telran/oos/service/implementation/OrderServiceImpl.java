@@ -42,10 +42,14 @@ public class OrderServiceImpl implements CrudService<OrderDto, Long>, WebSocketM
     }
 
     @Override
-    public OrderDto create(OrderDto order) {
-        orderRepository.save(convertToEntity(order));
+    public OrderDto create(OrderDto orderDto) {
+        Order order = orderRepository.save(convertToEntity(orderDto));
         log.debug("created order with id = {}", order.getId());
-        return convertToDto(orderRepository.findById(order.getId()).orElseThrow());
+        OrderDto res = convertToDto(orderRepository.findById(order.getId()).orElse(null));
+        if(res==null){
+            throw new ResourceNotFoundException(String.format("order didn't created"));
+        }
+        return res;
     }
 
     @Override
@@ -98,21 +102,37 @@ public class OrderServiceImpl implements CrudService<OrderDto, Long>, WebSocketM
 
     private Order convertToEntity(OrderDto orderDto){
         log.debug(orderDto.toString());
-        Order order = modelMapper.map(orderDto, Order.class);
+//        Order order = modelMapper.map(orderDto, Order.class);
+
+
+        User user = userRepository.findById(orderDto.getUserId()).orElse(null);
+        if(user==null){
+            throw new ResourceNotFoundException(String.format("user with id = %s is not defined", orderDto.getUserId()));
+        }
+        Order order = new Order();
+//        user,
+//                orderDto.getDeliveryAddress(),
+//                orderDto.getStatus(),
+//                orderDto.getDeliveryDate(),
+//                orderDto.getLastEditionDate()
+        order.setUser(user);
+        order.setDeliveryAddress(orderDto.getDeliveryAddress());
+        order.setStatus(orderDto.getStatus());
+        order.setDeliveryDate(orderDto.getDeliveryDate());
+        order.setLastEditionDate(orderDto.getLastEditionDate());
+
         List<OrderItem> items = orderDto.getOrderItems().stream().map(item->{
             Product product = productRepository.findById(item.getProductId()).orElse(null);
             if(product==null){
                 throw new ResourceNotFoundException(String.format("product with id = %s is not defined", item.getProductId()));
             }
-            return new OrderItem(order, product);
+            OrderItem res = new OrderItem(order, product);
+            res.setPricePerUnit(item.getPricePerUnit());
+            res.setQuantity(item.getQuantity());
+            return res;
         }).toList();
-
         order.setOrderItems(items);
-        User user = userRepository.findById(orderDto.getUserId()).orElse(null);
-        if(user==null){
-            throw new ResourceNotFoundException(String.format("user with id = %s is not defined", orderDto.getUserId()));
-        }
-        order.setUser(user);
+
         log.debug("order entity = {}", order.toString());
         return order;
     }

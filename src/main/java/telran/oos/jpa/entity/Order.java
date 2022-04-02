@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 @Table(name = "orders")
 public class Order {
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<OrderItem> orderItems;

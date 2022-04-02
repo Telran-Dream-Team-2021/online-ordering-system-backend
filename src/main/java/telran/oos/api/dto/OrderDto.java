@@ -1,5 +1,6 @@
 package telran.oos.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
@@ -16,7 +17,7 @@ import telran.oos.utils.JsonDateSerializer;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDto implements Idable {
-    // TODO validation rules
+    @JsonProperty("orderId")
     private Long id;
     private List<OrderItemDto> orderItems;
     private Long userId;

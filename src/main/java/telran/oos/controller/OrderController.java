@@ -27,26 +27,27 @@ public class OrderController {
 
     @GetMapping
     public List<OrderDto> getAllOrders(){
-        if(!isAdmin()){
-            throw new AccessDeniedException("Access denied");
-        }
+//        if(!isAdmin()){
+//            throw new AccessDeniedException("Access denied (getAllOrders)");
+//        }
         log.info("Getting all orders");
         return orderService.getAll();
     }
 
     @GetMapping("/{id}")
-    public OrderDto getOrder(@PathVariable Long id){
-        if(wrongAuth(id)){
-            throw new AccessDeniedException("Access denied");
-        }
-        log.info("Getting order with id = {}", id);
-        return orderService.read(id);
+    public List<OrderDto> getOrdersByUser(@PathVariable Long id){
+//        if(wrongAuth(id)){
+//            throw new AccessDeniedException("Access denied (getOrder)");
+//        }
+        List<OrderDto> res = orderService.getAll();
+        log.info("Getting orders by user id = {}", id);
+        return res.stream().filter(orderDto -> orderDto.getUserId()==id).toList();
     }
 
     @DeleteMapping("/{id}")
     public OrderDto deleteOrder(@PathVariable long id){
         if(wrongAuth(id)){
-            throw new AccessDeniedException("Access denied");
+            throw new AccessDeniedException("Access denied (deleteOrder)");
         }
         log.info("Deleting order with id = {}", id);
         return orderService.remove(id);
@@ -61,7 +62,7 @@ public class OrderController {
     @PutMapping("/{id}")
     public OrderDto updateOrder(@PathVariable long id, @RequestBody OrderDto order){
         if(wrongAuth(id)){
-            throw new AccessDeniedException("Access denied");
+            throw new AccessDeniedException("Access denied (updateOrder)");
         }
         log.info("Updating order with id = {}", id);
         return orderService.update(id, order);
